@@ -1,5 +1,5 @@
 # ECSE 689: Realistic Image Synthesis
-**McGill University**
+**McGill University &mdash; Fall 2016**
 
 **Instructor:** Derek Nowrouzezahrai
 
