@@ -1,2 +1,2 @@
-# ecse-689
-Realistic Image Synthesis
+# ECSE 689
+## Realistic Image Synthesis
