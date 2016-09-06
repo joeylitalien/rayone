@@ -179,6 +179,6 @@ int main(int argc, char *argv[]) {
                            toDisplayValue(pixelColors[p].z));
   }
   fclose(f);   // Close file
-  delete pixelColors;   // Free allocated memory
+  delete pixelColors;   // Free memory
   return 0;
 }
