@@ -78,15 +78,15 @@ struct Sphere {
 };
 
 
-// Construct simple scene with 8 spheres
+// Construct simple scene with 3 spheres and 5 walls
 Sphere spheres[] = {
   Sphere(1e5,  Vec(1e5 + 1, 40.8, 81.6), Vec(0, 0, 0), Vec(.75, .25, .25)),
   Sphere(1e5,  Vec(-1e5 + 99, 40.8, 81.6), Vec(0, 0, 0), Vec(.25, .25, .75)),
   Sphere(1e5,  Vec(50, 40.8, 1e5), Vec(0, 0, 0), Vec(.75, .75, .75)),
   Sphere(1e5,  Vec(50, 1e5, 81.6), Vec(0, 0, 0), Vec(.75, .75, .75)),
   Sphere(1e5,  Vec(50, -1e5 + 81.6, 81.6), Vec(0, 0, 0), Vec(.75, .75, .75)),
-  Sphere(16.5,  Vec(27, 16.5, 47), Vec(0, 0, 0), Vec(.999, .999, .999)),
-  Sphere(16.5,  Vec(73, 16.5, 78), Vec(0, 0, 0), Vec(.999, .999, .999) ),
+  Sphere(16.5, Vec(27, 16.5, 47), Vec(0, 0, 0), Vec(.999, .999, .999)),
+  Sphere(16.5, Vec(73, 16.5, 78), Vec(0, 0, 0), Vec(.999, .999, .999) ),
   Sphere(10.5, Vec(50, 68.6 - .27, 81.6), Vec(400, 400, 400), Vec(1, 1, 1))
 };
 
@@ -106,7 +106,7 @@ inline bool intersect(const Ray &r, double &t, int &id) {
   double n = sizeof(spheres) / sizeof(Sphere);
   double d, inf = t = 1e20;
 
-  for (int i = int(n); --i) {   // Check interesection against all spheres
+  for (int i = int(n); i--;) {   // Check interesection against all spheres
     if ((d = spheres[i].intersect(r)) && d < t) {   // Intersection found
       t = d;   // Update t parameter
       id = i;   // Store sphere ID
@@ -150,9 +150,9 @@ int main(int argc, char *argv[]) {
   #pragma omp parallel for schedule(dynamic, 1) private(pixelValue)
 
   // Assign value to each pixel in grid
-  for (int y = 0; y < h; ++y) {
-    fprintf(stderr, "\r%5.2f%%", 100.*y/(h-1));
-    for (int x = 0; x < w; ++x) {
+  for (int y = 0; y < h; y++) {
+    fprintf(stderr, "\r%5.2f%%", 100.*y / (h - 1));
+    for (int x = 0; x < w; x++) {
       int idx = (h - y - 1) * w + x;
       pixelValue = Vec();
       Vec cameraRayDir = cx * (double(x) / w - .5) +
@@ -173,7 +173,7 @@ int main(int argc, char *argv[]) {
   // See http://netpbm.sourceforge.net/doc/ppm.html for more info
   FILE *f = fopen("image.ppm", "w");
   fprintf(f, "P3\n%d %d\n%d\n", w, h, 255);
-  for (int p = 0; p < w * h; ++p) {
+  for (int p = 0; p < w * h; p++) {
     fprintf(f,"%d %d %d ", toDisplayValue(pixelColors[p].x),
                            toDisplayValue(pixelColors[p].y),
                            toDisplayValue(pixelColors[p].z));
