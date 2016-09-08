@@ -5,14 +5,17 @@ CORE = core
 OBJ = objs
 BIN = bin
 
-rt: raytracer.o shapes.o geometry.o
-	$(CXX) $(CXXFLAGS) $(addprefix $(OBJ)/, raytracer.o shapes.o geometry.o) -o $(BIN)/raytracer
+rt: raytracer.o primitive.o geometry.o light.o
+	$(CXX) $(CXXFLAGS) $(addprefix $(OBJ)/, raytracer.o primitive.o geometry.o) -o $(BIN)/raytracer
 
 raytracer.o: $(MAIN)/raytracer.cpp $(CORE)/raytracer.h
 	$(CXX) -c $(MAIN)/raytracer.cpp -o $(OBJ)/$@
 
-shapes.o: $(addprefix $(CORE)/, shapes.cpp shapes.h)
-	$(CXX) -c $(CORE)/shapes.cpp -o $(OBJ)/$@
+primitive.o: $(addprefix $(CORE)/, primitive.cpp primitive.h)
+	$(CXX) -c $(CORE)/primitive.cpp -o $(OBJ)/$@
 
 geometry.o: $(addprefix $(CORE)/, geometry.cpp geometry.h)
 	$(CXX) -c $(CORE)/geometry.cpp -o $(OBJ)/$@
+
+light.o: $(addprefix $(CORE)/, light.cpp light.h)
+	$(CXX) -c $(CORE)/light.cpp -o $(OBJ)/$@

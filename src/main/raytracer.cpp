@@ -28,6 +28,8 @@ Sphere spheres[] = {
   Sphere(10.5, vec3(50, 68.6 - .27, 81.6), vec3(400, 400, 400), vec3(1, 1, 1))
 };
 
+Light *light = new Light(vec3(40, 40, 50), 0.02);
+
 /**
  *   Pixel shader
  *   Test for intersection and return shading value
@@ -35,14 +37,16 @@ Sphere spheres[] = {
 vec3 shade(const Ray &r) {
   float t;
   int id = 0;
-  if (!intersect(r, t, id))   // No interesections, return empty vector
-    return vec3();
+  if (!intersect(r, t, id)) return vec3();
 
-  const Sphere &obj = spheres[id];   // Else, get sphere ID
+  const Sphere &obj = spheres[id];
   vec3 x = r.o + r.d * t;   // Retrieve point on sphere
   vec3 n = normalize(x - obj.p);   // Compute normal at this point
 
-  return n + obj.c;   // Return shading value (normal & color mix)
+  // Compute diffuse value using Lambertian reflectance
+  vec3 diffuse = dot(x - light->p, n) * obj.c * light->i;
+
+  return n + obj.c + diffuse;   // Return shading value (normal & color mix)
 }
 
 /**
