@@ -10,77 +10,64 @@
 #include "../core/raytracer.h"
 
 // Construct simple scene with 3 spheres and 5 walls
-// 5 giant spheres as locally flat walls, 3 small spheres as actual spheres
 Sphere spheres[] = {
-  // Left wall
-  Sphere(1e5, vec3(1e5 + 1, 40.8, 81.6), vec3(0, 0, 0), vec3(.75, .25, .25)),
-  // Right wall
-  Sphere(1e5, vec3(-1e5 + 99, 40.8, 81.6), vec3(0, 0, 0), vec3(.25, .25, .75)),
-  // Back wall
-  Sphere(1e5, vec3(50, 40.8, 1e5), vec3(0, 0, 0), vec3(.75, .75, .75)),
-  // Floor
-  Sphere(1e5, vec3(50, 1e5, 81.6), vec3(0, 0, 0), vec3(.75, .75, .75)),
-  // Ceiling
-  Sphere(1e5, vec3(50, -1e5 + 81.6, 81.6), vec3(0, 0, 0), vec3(.75, .75, .75)),
+  // Walls (left, right, back, floor, ceiling)
+  Sphere(1e5,  Vec(1e5 + 1, 40.8, 81.6),   Vec(), Vec(.75, .25, .25), DIFF),
+  Sphere(1e5,  Vec(-1e5 + 99, 40.8, 81.6), Vec(), Vec(.25, .25, .75), DIFF),
+  Sphere(1e5,  Vec(50, 40.8, 1e5),         Vec(), Vec(.75),           DIFF),
+  Sphere(1e5,  Vec(50, 1e5, 81.6),         Vec(), Vec(.75),           DIFF),
+  Sphere(1e5,  Vec(50, -1e5 + 81.6, 81.6), Vec(), Vec(.75),           DIFF),
   // Sphere objects
-  Sphere(16.5, vec3(27, 16.5, 47), vec3(0, 0, 0), vec3(.999, .999, .999)),
-  Sphere(16.5, vec3(73, 16.5, 78), vec3(0, 0, 0), vec3(.999, .999, .999)),
-  Sphere(10.5, vec3(50, 68.6 - .27, 81.6), vec3(400, 400, 400), vec3(1, 1, 1))
+  Sphere(16.5, Vec(27, 16.5, 47),          Vec(), Vec(.999),          DIFF),
+  Sphere(16.5, Vec(73, 16.5, 78),          Vec(), Vec(.999),          DIFF),
+  Sphere(10.5, Vec(50, 68.6 - .27, 81.6),  Vec(400.), Vec(1.),        DIFF)
 };
 
-Light *light = new Light(vec3(40, 40, 50), 0.02);
+int numSpheres = sizeof(spheres) / sizeof(Sphere);
 
-/**
- *   Pixel shader
- *   Test for intersection and return shading value
- */
-vec3 shade(const Ray &r) {
-  float t;
+// Pixel shader
+// Test for intersection and return shading value
+Vec shade(const Ray &r) {
+  double t;
   int id = 0;
-  if (!intersect(r, t, id)) return vec3();
+  if (!intersect(r, t, id)) return Vec();
 
   const Sphere &obj = spheres[id];
-  vec3 x = r.o + r.d * t;   // Retrieve point on sphere
-  vec3 n = normalize(x - obj.p);   // Compute normal at this point
+  Vec x = r.o + r.d * t;   // Intersection point
+  Vec n = (x - obj.p).norm();   // Normal
 
-  // Compute diffuse value using Lambertian reflectance
-  vec3 diffuse = dot(x - light->p, n) * obj.c * light->i;
+  // if (obj.mat == DIFF) {
+  //   double rdAng = 2 * M_PI * erand48(Xi);
+  //   double rdDist = sqrt(erand48(Xi));
+  // }
 
-  return n + obj.c + diffuse;   // Return shading value (normal & color mix)
+  return obj.c + n;   // Return shading value (normal & color mix)
 }
 
-/**
- *   Intersect ray with scene
- *   Take a ray, a parameter t and an object ID, output if interesection (bool)
- */
-inline bool intersect(const Ray &r, float &t, int &id) {
-  double n = sizeof(spheres) / sizeof(Sphere);
+// Intersect ray with scene
+// Take a ray, a parameter t and an object ID, output if interesection (bool)
+inline bool intersect(const Ray &r, double &t, int &id) {
   double d, inf = t = 1e20;
-
-  for (int i = int(n); i--;) {   // Check interesection against all spheres
+  for (int i = numSpheres; i--;) {   // Check interesection against all spheres
     if ((d = spheres[i].Intersect(r)) && d < t) {   // Intersection found
       t = d;   // Update t parameter
       id = i;   // Store sphere ID
     }
   }
-
   return t < inf;
 }
 
-
-/**
- *   Main render loop
- *   Render image seen from a camera and write image to PPM file
- */
+// Main render loop
+// Render image seen from a camera and write image to PPM file
 int main(int argc, char *argv[]) {
   int w = 800, h = 600;   // Set display resolution
 
   // tan(30 / 180 * pi) == 0.57735 serves as camera field of view
-  Ray camera(vec3(50, 50, 275.0), normalize(vec3(0, -0.05, -1)));   // Camera
-  vec3 cx = vec3(w * 0.57735 / h, 0., 0.);   // Camera x vector
-  vec3 cy = normalize(cross(cx, camera.d)) * 0.57735f;   // Camera up vector
+  Ray camera(Vec(50, 50, 275.0), Vec(0, -0.05, -1).norm());   // Camera
+  Vec cx = Vec(w * 0.57735 / h, 0., 0.);   // Camera x vector
+  Vec cy = cx.cross(camera.d).norm() * 0.57735;   // Camera up vector
 
-  vec3 pixelValue, *pixelColors = new vec3[w * h];   // New pixel grid
+  Vec pixelValue, *pixelColors = new Vec[w * h];   // New pixel grid
 
   // Tell compiler to use OMP loop scheduler for parallel computing
   #pragma omp parallel for schedule(dynamic, 1) private(pixelValue)
@@ -90,16 +77,16 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "\r%5.2f%%", 100.*y / (h - 1));
     for (int x = 0; x < w; x++) {
       int idx = (h - y - 1) * w + x;
-      pixelValue = vec3();
-      vec3 cameraRayDir = cx * (float(x) / w - .5f) +
-                          cy * (float(y) / h - .5f) +
+      pixelValue = Vec();
+      Vec cameraRayDir = cx * (double(x) / w - .5f) +
+                          cy * (double(y) / h - .5f) +
                           camera.d;
       // Shade point
-      pixelValue = shade(Ray(camera.o, normalize(cameraRayDir)));
+      pixelValue = shade(Ray(camera.o, cameraRayDir.norm()));
       // Convert shaded point to RGB value for display
-      pixelColors[idx] = vec3(clamp(pixelValue.x),
-                              clamp(pixelValue.y),
-                              clamp(pixelValue.z));
+      pixelColors[idx] = Vec(clamp(pixelValue.x),
+                             clamp(pixelValue.y),
+                             clamp(pixelValue.z));
     }
   }
 
