@@ -1,15 +1,18 @@
 CXX = g++-5
-CXXFLAGS = -fopenmp -Wall
+CXXFLAGS = -Wall -fopenmp
 MAIN = main
 CORE = core
 OBJ = objs
 BIN = bin
 
-rt: raytracer.o shape.o
-	$(CXX) $(CXXFLAGS) $(C11) $(addprefix $(OBJ)/, raytracer.o shape.o) -o $(BIN)/raytracer
+pt: pathtracer.o shape.o renderer.o
+	$(CXX) $(CXXFLAGS) $(addprefix $(OBJ)/, pathtracer.o shape.o renderer.o) -o $(BIN)/pathtracer
 
-raytracer.o: $(MAIN)/raytracer.cpp $(CORE)/raytracer.h $(CORE)/geometry.h
-	$(CXX) -c $(MAIN)/raytracer.cpp -o $(OBJ)/$@
-
+pathtracer.o: $(MAIN)/pathtracer.cpp $(CORE)/pathtracer.h $(CORE)/geometry.h
+	$(CXX) -c $(MAIN)/pathtracer.cpp -o $(OBJ)/$@
+#
 shape.o: $(addprefix $(CORE)/, shape.cpp shape.h)
 	$(CXX) -c $(CORE)/shape.cpp -o $(OBJ)/$@
+
+renderer.o: $(addprefix $(CORE)/, renderer.cpp renderer.h)
+	$(CXX) -c $(CORE)/renderer.cpp -o $(OBJ)/$@

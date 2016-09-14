@@ -1,32 +1,36 @@
 // core/geometry.h
-#ifndef RT_CORE_GEOMETRY_H
-#define RT_CORE_GEOMETRY_H
+#ifndef PT_CORE_GEOMETRY_H
+#define PT_CORE_GEOMETRY_H
 
-#include "raytracer.h"
+#include "pathtracer.h"
 
 // Vec class declaration
 // Vector u = (x, y, z)
 class Vec {
 public:
-  Vec() { x = y = z = 0.; }
-  Vec(const double &w) { x = y = z = w; }
-  Vec(const double &x_, const double &y_, const double &z_)
-    : x(x_), y(y_), z(z_) {}
+  double x, y, z;
+  // Constructor
+  Vec(double x_= 0, double y_= 0, double z_= 0) { x = x_; y = y_; z = z_; }
 
-  // Operator overloading: Add, subtract and mulitply by scalar
+  // Operator overloading: Add, flip sign, subtract and mulitply by scalar
   Vec operator+(const Vec &v) const { return Vec(x + v.x, y + v.y, z + v.z); }
+  Vec operator-() const { return Vec(-x, -y, -z); }
   Vec operator-(const Vec &v) const { return Vec(x - v.x, y - v.y, z - v.z); }
-  Vec operator*(double s) const { return Vec(x * s, y * s, z * s); }
+  Vec operator*(double k) const { return Vec(x * k, y * k, z * k); }
 
-  // Vector operations: dot, cross, point-wise multiplication and norm
-  double dot(const Vec &v) const { return x * v.x + y * v.y + z * v.z; }
-  Vec cross(const Vec &v) const {
+  // Vector operations: dot, cross, point-wise multiplication
+  inline double Dot(const Vec &v) const { return x * v.x + y * v.y + z * v.z; }
+  // Vec cross(const Vec &v) const {
+  //   return Vec(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
+  // }
+  // Test
+  Vec operator%(Vec &v) {
     return Vec(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);
   }
-  Vec mult(const Vec &v) const { return Vec(x * v.x, y * v.y, z * v.z); }
-  Vec &norm() { return *this = *this * (1.0 / sqrt(x * x + y * y + z * z)); }
+  Vec Mult(const Vec &v) const { return Vec(x * v.x, y * v.y, z * v.z); }
 
-  double x, y, z;
+  // Euclidean norm and norm squared
+  Vec &Norm() { return *this = *this * (1 / sqrt(x * x + y * y + z * z)); }
 };
 
 // Ray class declaration
@@ -34,7 +38,8 @@ public:
 class Ray {
 public:
   Ray(Vec o_, Vec d_) : o(o_), d(d_) {}
+  Vec operator()(double t) const { return o + d * t; }
   Vec o, d;
 };
 
-#endif   // RT_CORE_GEOMETRY_H
+#endif   // PT_CORE_GEOMETRY_H
