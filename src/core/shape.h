@@ -1,8 +1,8 @@
 // core/shape.h
-#ifndef RT_CORE_SHAPE_H
-#define RT_CORE_SHAPE_H
+#ifndef PT_CORE_SHAPE_H
+#define PT_CORE_SHAPE_H
 
-#include "raytracer.h"
+#include "pathtracer.h"
 #include "geometry.h"
 
 // New material type declaration
@@ -10,8 +10,8 @@
 enum Mat_t { DIFF, SPEC, REFR };
 
 // Shape class declaration
-// Position p, emission e, color c
-// Material m (diffuse, specular, refraction)
+// Position p, emission e & color c
+// Material m (diffuse, specular & refractive)
 class Shape {
 public:
   Shape(const Vec &p_, const Vec &e_, const Vec &c_, const Mat_t &m_)
@@ -47,4 +47,4 @@ public:
   double l;
 };
 
-#endif   // RT_CORE_SHAPE_H
+#endif   // PT_CORE_SHAPE_H
