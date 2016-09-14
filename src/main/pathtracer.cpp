@@ -8,6 +8,7 @@
    Images are written in PPM format
    See http://netpbm.sourceforge.net/doc/ppm.html for more info
    Based on smallpt developed by Kevin Beason (2008)
+   Techniques based on Realistic Ray Tracing (RRT) by Shirley & Morley
 */
 
 // main/pathtracer.cpp
@@ -22,8 +23,8 @@ Sphere scene[] = {
   Sphere(1e5, Vec(50,40.8,-1e5+170), Vec(),Vec(),           DIFF),  // Front
   Sphere(1e5, Vec(50, 1e5, 81.6),    Vec(),Vec(.75,.75,.75),DIFF),  // Floor
   Sphere(1e5, Vec(50,-1e5+81.6,81.6),Vec(),Vec(.75,.75,.75),DIFF),  // Ceiling
-  Sphere(16.5,Vec(27,16.5,47),       Vec(),Vec(1,1,1)*.999, DIFF),  // Mirror
-  Sphere(16.5,Vec(73,16.5,78),       Vec(),Vec(1,1,1)*.999, DIFF),  // Glass
+  Sphere(16.5,Vec(27,16.5,47),       Vec(),Vec(1,1,1)*.999, SPEC),  // Mirror
+  Sphere(16.5,Vec(73,16.5,78),       Vec(),Vec(1,1,1)*.999, SPEC),  // Glass
   Sphere(1.5, Vec(50,81.6-16.5,81.6),Vec(4,4,4)*100,  Vec(),DIFF)   // Light
 };
 
@@ -39,7 +40,7 @@ int main(int argc, char *argv[]) {
   // tan(28 / 180 * pi) == 0.5317 serves as camera FoV
   Ray cam(Vec(50, 52, 295.6), Vec(0, -0.05, -1).Norm());   // Cam lookAt vector
   Vec cx = Vec(w * 0.5317 / h);                            // Cam x vector
-  Vec cy = (cx % cam.d).Norm() * .5317;                    // Cam up vector
+  Vec cy = (cx.Cross(cam.d)).Norm() * .5317;                // Cam up vector
 
   Vec pixVal;                     // Sample color
   Vec *pixCol = new Vec[w * h];   // New pixel grid for image

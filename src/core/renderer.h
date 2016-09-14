@@ -16,10 +16,9 @@ public:
   Renderer() {}
   ~Renderer() {}
   Vec Radiance(const Sphere (&scene)[sceneSize], const Ray &r, int depth,
-               unsigned short *Xi, int E = 1);
+    unsigned short *Xi, int E = 1);
   bool Intersect(const Sphere (&scene)[sceneSize], const Ray &r, double &t,
-                 int &id);
-  inline void BuildOrthonormalFrame(Vec &u, Vec &v, Vec &w);
+    int &id);
 };
 
 #endif   // PT_CORE_RENDERER_H
