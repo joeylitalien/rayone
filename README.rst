@@ -30,7 +30,7 @@ Future Implementations
 Current Known Issues
 --------------------
 * White grain regardless of sampling rate
-* Design assumes spherical objects, but attempts to generalize with Shape class
+* Cannot retrieve radius of Sphere for ray hit since the scene is a Shape vector
 
 .. _smallpt: http://www.kevinbeason.com/smallpt
 .. _Physically Based Rendering: http://pbrt.org
