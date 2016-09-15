@@ -3,23 +3,22 @@
 #define PT_CORE_RENDERER_H
 
 #include "pathtracer.h"
+#include <vector>
 
-
-// Forward declaration
-class Sphere;
+// Forward declaration (shouldn't have to do this)
+class Shape;
+struct Intersection;
 
 // Render class declaration
 // Provide shading and intersecting methods for the scene
 class Renderer {
-protected:
-  static const int sceneSize = 9;   // Ugly definition, will change
 public:
-  Renderer() {}
+  Renderer(std::vector<Shape *> s) : scene(s) {}
   ~Renderer() {}
-  Vec Radiance(const Sphere (&scene)[sceneSize], const Ray &r, int depth,
-    unsigned short *Xi, int E = 1);
-  bool Intersect(const Sphere (&scene)[sceneSize], const Ray &r, double &t,
-    int &id);
+  Vec Radiance(const Ray &r, int depth, unsigned short *Xi, int E = 1) const;
+  Intersection Intersect(const Ray &r) const;
+
+  std::vector<Shape *> scene;
 };
 
 #endif   // PT_CORE_RENDERER_H
