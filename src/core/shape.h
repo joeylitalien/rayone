@@ -5,6 +5,7 @@
 #include "pathtracer.h"
 #include "geometry.h"
 
+
 // New material type declaration
 // DIFFuse (most objects), SPECular (e.g. mirror) or REFRactive (e.g. glass)
 enum Mat_t { DIFF, SPEC, REFR };

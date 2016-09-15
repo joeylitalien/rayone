@@ -1,6 +1,7 @@
 // core/shape.cpp
 #include "shape.h"
 
+
 // Virtual methods
 double Shape::Intersect(const Ray &ray) const {
   printf("Unimplemented Shape::Intersect() method called\n");
@@ -14,9 +15,6 @@ Vec Shape::SurfaceNormal(const Ray &r, double t) const {
 
 // Compute geometric intersection of sphere with casted ray
 // Return t value of ray interesection with sphere (r = o + td)
-// ---
-// Take vector op between ray origin and sphere center, project onto ray
-// direction vector d and apply Pythagorean theorem to find interesection
 // See en.wikipedia.org/wiki/Line-sphere_intersection for derivation
 double Sphere::Intersect(const Ray &ray) const {
   Vec op = p - ray.o;

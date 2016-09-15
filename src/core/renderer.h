@@ -4,14 +4,15 @@
 
 #include "pathtracer.h"
 
+
 // Forward declaration
 class Sphere;
 
 // Render class declaration
-// Provide shading and intersecting methods for spheres
+// Provide shading and intersecting methods for the scene
 class Renderer {
 protected:
-  static const int sceneSize = 9;
+  static const int sceneSize = 9;   // Ugly definition, will change
 public:
   Renderer() {}
   ~Renderer() {}

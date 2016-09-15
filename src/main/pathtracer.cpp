@@ -5,10 +5,7 @@
    Author: Joey Litalien <joeylitalien@gmail.com>
    Date: 09/2016
 
-   Images are written in PPM format
-   See http://netpbm.sourceforge.net/doc/ppm.html for more info
-   Based on smallpt developed by Kevin Beason (2008)
-   Techniques based on Realistic Ray Tracing (RRT) by Shirley & Morley
+   Partly based on smallPT developed by Kevin Beason (2008)
 */
 
 // main/pathtracer.cpp
@@ -23,18 +20,20 @@ Sphere scene[] = {
   Sphere(1e5, Vec(50,40.8,-1e5+170), Vec(),Vec(),           DIFF),  // Front
   Sphere(1e5, Vec(50, 1e5, 81.6),    Vec(),Vec(.75,.75,.75),DIFF),  // Floor
   Sphere(1e5, Vec(50,-1e5+81.6,81.6),Vec(),Vec(.75,.75,.75),DIFF),  // Ceiling
-  Sphere(16.5,Vec(27,16.5,47),       Vec(),Vec(1,1,1)*.999, SPEC),  // Mirror
+  Sphere(16.5,Vec(27,16.5,47),       Vec(),Vec(1,1,1)*.999, DIFF),  // Mirror
   Sphere(16.5,Vec(73,16.5,78),       Vec(),Vec(1,1,1)*.999, SPEC),  // Glass
   Sphere(1.5, Vec(50,81.6-16.5,81.6),Vec(4,4,4)*100,  Vec(),DIFF)   // Light
 };
 
-// Scene renderer
+
+// Initialize render engine
 Renderer *RNDR = new Renderer();
 
 // Main rendering loop
 // Render image seen from a camera and write image to PPM file
 int main(int argc, char *argv[]) {
-  static int w = 512, h = 384;                       // Image resolution
+  //static int w = 512, h = 384;                       // Image resolution
+  static int w = 360, h = 270;
   static int spp = argc > 1 ? atoi(argv[1])/4 : 1;   // Samples per pixel (SPP)
 
   // tan(28 / 180 * pi) == 0.5317 serves as camera FoV
@@ -59,7 +58,7 @@ int main(int argc, char *argv[]) {
         int i = (h - y - 1) * w + x;
         for (int sx = 0; sx < 2; sx++) {   // 2x2 subpixel columns
           pixVal = Vec();                  // Initialize pixel
-          // Create a tent filter at each subpixel
+          // Jitter pixel randomly in dx and dy according to a tent filter
           double dx, dy; TentFilter(dx, dy, Xi);
           for (int sample = 0; sample < spp; sample++) {
             // Compute camera ray direction
@@ -80,7 +79,8 @@ int main(int argc, char *argv[]) {
   }
 
   // Write image as PPM Portable Bitmap Format
-  FILE *f = fopen("image.ppm", "w");
+  // See http://netpbm.sourceforge.net/doc/ppm.html for more info
+  FILE *f = fopen("s-1024spp.ppm", "w");
   fprintf(f, "P3\n%d %d\n%d\n", w, h, 255);
   for (int p = 0; p < w * h; p++) {
     fprintf(f, "%d %d %d ", ToDisplayValue(pixCol[p].x),

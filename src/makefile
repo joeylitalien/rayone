@@ -1,5 +1,5 @@
 CXX = g++-5
-CXXFLAGS = -Wall -fopenmp
+CXXFLAGS = -Wall -fopenmp -std=c++11
 MAIN = main
 CORE = core
 OBJ = objs
