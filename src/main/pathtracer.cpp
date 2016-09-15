@@ -1,11 +1,15 @@
 /**
-   A simple Monte Carlo path tracer for ECSE 689 Physically Based Rendering
-   Fall 2016, McGill University - Prof. Derek Nowrouzezahrai
+   RAYONE is a simple global illumination renderer that uses Monte Carlo
+   techniques such as importance sampling, rejection sampling, and
+   variance reduction to render simple scenes
+
+   This path tracer is being developed based on David Beason's smallpt while
+   remotely following the course ECSE 689 Realistic Image Synthesis by
+   D. Nowrouzezahrai (McGill University, Fall 2016) and reading Physically
+   Based Rendering by M. Pharr and G. Humphreys.
 
    Author: Joey Litalien <joeylitalien@gmail.com>
    Date: 09/2016
-
-   Partly based on smallPT developed by Kevin Beason (2008)
 */
 
 // main/pathtracer.cpp
@@ -25,10 +29,6 @@ Sphere scene[] = {
   Sphere(1.5, Vec(50,81.6-16.5,81.6),Vec(4,4,4)*100,  Vec(),DIFF)   // Light
 };
 
-
-// Initialize render engine
-Renderer *RNDR = new Renderer();
-
 // Main rendering loop
 // Render image seen from a camera and write image to PPM file
 int main(int argc, char *argv[]) {
@@ -43,6 +43,9 @@ int main(int argc, char *argv[]) {
 
   Vec pixVal;                     // Sample color
   Vec *pixCol = new Vec[w * h];   // New pixel grid for image
+
+  // Initialize render engine
+  Renderer *rayone = new Renderer();
 
   // Use OMP loop scheduler for parallel computing
   #pragma omp parallel for schedule(dynamic, 1) private(pixVal)
@@ -66,7 +69,7 @@ int main(int argc, char *argv[]) {
                             cy * (((sy + .5 + dy) / 2 + y) / h - .5) + cam.d;
             // Shade pixel using radiance value
             // Camera rays are pushed forward to start in interior of vox
-            pixVal = pixVal + RNDR->Radiance(scene, Ray(cam.o + camRayDir * 140,
+            pixVal = pixVal + rayone->Radiance(scene, Ray(cam.o + camRayDir * 140,
                        camRayDir.Norm()), 0, Xi) * (1./spp);
           }
          // Convert shaded point to RGB value for display
@@ -80,7 +83,7 @@ int main(int argc, char *argv[]) {
 
   // Write image as PPM Portable Bitmap Format
   // See http://netpbm.sourceforge.net/doc/ppm.html for more info
-  FILE *f = fopen("s-1024spp.ppm", "w");
+  FILE *f = fopen("image.ppm", "w");
   fprintf(f, "P3\n%d %d\n%d\n", w, h, 255);
   for (int p = 0; p < w * h; p++) {
     fprintf(f, "%d %d %d ", ToDisplayValue(pixCol[p].x),
@@ -89,6 +92,6 @@ int main(int argc, char *argv[]) {
   }
   fclose(f);         // Close file
   delete[] pixCol;   // Free allocated memory
-  delete RNDR;
+  delete rayone;
   return 0;
 }
