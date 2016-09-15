@@ -29,7 +29,8 @@ Future Implementations
 
 Current Known Issues
 --------------------
-* White grain regardless of sample rate
+* White grain regardless of sampling rate
+* Design assumes spherical objects, but attempts to generalize with Shape class
 
 .. _smallpt: http://www.kevinbeason.com/smallpt
 .. _Physically Based Rendering: http://pbrt.org
