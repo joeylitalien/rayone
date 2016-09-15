@@ -8,21 +8,21 @@
 
 // New material type declaration
 // DIFFuse (most objects), SPECular (e.g. mirror) or REFRactive (e.g. glass)
-enum Mat_t { DIFF, SPEC, REFR };
+enum mat_t { DIFF, SPEC, REFR };
 
 // Shape class declaration
 // Position p, emission e & color c
 // Material m (diffuse, specular & refractive)
 class Shape {
 public:
-  Shape(const Vec &p_, const Vec &e_, const Vec &c_, const Mat_t &m_)
+  Shape(const Vec &p_, const Vec &e_, const Vec &c_, const mat_t &m_)
     : p(p_), e(e_), c(c_), m(m_) {}
   virtual ~Shape() {}
   virtual double Intersect(const Ray &ray) const;
   virtual Vec SurfaceNormal(const Ray &r, double t) const;
 
   Vec p, e, c;
-  Mat_t m;
+  mat_t m;
 };
 
 // Sphere subclass declaration
@@ -30,7 +30,7 @@ public:
 class Sphere : public Shape {
 public:
   Sphere(const double &r_, const Vec &p_, const Vec &e_, const Vec &c_,
-    const Mat_t &m_) : r(r_), Shape(p_, e_, c_, m_) {}
+    const mat_t &m_) : r(r_), Shape(p_, e_, c_, m_) {}
   double Intersect(const Ray &ray) const;
   Vec SurfaceNormal(const Ray &r, double t) const;
 

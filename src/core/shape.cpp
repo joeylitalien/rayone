@@ -18,11 +18,11 @@ Vec Shape::SurfaceNormal(const Ray &r, double t) const {
 // See en.wikipedia.org/wiki/Line-sphere_intersection for derivation
 double Sphere::Intersect(const Ray &ray) const {
   Vec op = p - ray.o;
-  double t, eps = 1e-4;   // Small nonzero value to handle rounding errors
+  double t;
   double b = op.Dot(ray.d);
   double det = b*b - op.Dot(op) + r*r;
   if (det < 0) return 0; else det = sqrt(det);
-  return (t = b - det) > eps ? t : ((t = b + det) > eps ? t : 0);
+  return (t = b - det) > EPS ? t : ((t = b + det) > EPS ? t : 0);
 }
 
 Vec Sphere::SurfaceNormal(const Ray &r, double t) const {
