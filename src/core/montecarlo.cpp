@@ -1,7 +1,6 @@
 // core/montecarlo.cpp
 #include "montecarlo.h"
 
-
 // Cosine-weighted hemispherical importance sampling
 Vec UniformSampleHemisphere(double xi[2]) {
   double r = sqrt(1 - xi[0] * xi[0]);
