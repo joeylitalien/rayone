@@ -12,8 +12,9 @@
 
 
 // Global constants
-#define RR_DEPTH 5
-#define MAX_DEPTH 10
+#define RR_DEPTH 5     // Number of bounce before Russian Roulette
+#define MAX_DEPTH 10   // Maximum number a ray can bounce
+#define EPS 1e-4       // Small nonzero value for ray intersection
 
 // Global forward declarations
 class Vec;
@@ -38,7 +39,6 @@ inline double RandomGen(unsigned short *seed) {
 }
 
 // Antialiasing tent filter (approximate sinc filter)
-// See http://computergraphics.stackexchange.com/q/3868 for more info
 inline void TentFilter(double &dx, double &dy, unsigned short int *Xi) {
   double a = 2 * RandomGen(Xi); dx = a < 1 ? sqrt(a) - 1 : 1 - sqrt(2 - a);
   double b = 2 * RandomGen(Xi); dy = b < 1 ? sqrt(b) - 1 : 1 - sqrt(2 - b);
