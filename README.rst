@@ -3,7 +3,7 @@ Rayono
 
 Small description
 -----------------
-*Rayono* is a simple global illumination renderer that uses Monte Carlo techniques such as importance sampling, rejection sampling, and variance reduction to render simple scenes (e.g. Cornell Box). This path tracer is being developed based on David Beason's [smallpt] while remotely following the course [ECSE 689 Realistic Image Synthesis][website] by D. Nowrouzezahrai (McGill University, Fall 2016) and reading [Physically Based Rendering][pbrt] by M. Pharr and G. Humphreys.
+*Rayono* is a simple global illumination renderer that uses Monte Carlo techniques such as importance sampling, rejection sampling, and variance reduction to render simple scenes (e.g. Cornell Box). This path tracer is being developed based on David Beason's `smallpt`_ while remotely following the course `ECSE 689 Realistic Image Synthesis`_ by D. Nowrouzezahrai (McGill University, Fall 2016) and reading `Physically Based Rendering`_ by M. Pharr and G. Humphreys.
 
 Features
 --------
@@ -31,6 +31,6 @@ Current Known Issues
 --------------------
 * White grain regardless of sample rate
 
-[smallpt]: http://www.kevinbeason.com/smallpt
-[pbrt]: http://pbrt.org
-[website]: http://www.cim.mcgill.ca/~derek/ecse689.html
+.. _smallpt: http://www.kevinbeason.com/smallpt
+.. _Physically Based Rendering: http://pbrt.org
+.. _ECSE 689 Realistic Image Synthesis: http://www.cim.mcgill.ca/~derek/ecse689.html
