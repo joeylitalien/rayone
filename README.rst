@@ -9,7 +9,7 @@ Features
 --------
 * Global illumination via unbiased Monte Carlo path tracing
 * Modular code
-* Multithreading using OpenMP
+* Multithreading using `OpenMP`_
 * Soft shadows from diffuse luminaire
 * Diffuse and specular BRDFs
 * Antialiasing
@@ -34,3 +34,4 @@ Current Known Issues
 .. _smallpt: http://www.kevinbeason.com/smallpt
 .. _Physically Based Rendering: http://pbrt.org
 .. _ECSE 689 Realistic Image Synthesis: http://www.cim.mcgill.ca/~derek/ecse689.html
+.. _OpenMP: http://openmp.org/wp
