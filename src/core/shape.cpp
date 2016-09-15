@@ -16,18 +16,18 @@ Vec Shape::SurfaceNormal(const Ray &r, double t) const {
 // Compute geometric intersection of sphere with casted ray
 // Return t value of ray interesection with sphere (r = o + td)
 // See en.wikipedia.org/wiki/Line-sphere_intersection for derivation
-double Sphere::Intersect(const Ray &ray) const {
-  Vec op = p - ray.o;
+double Sphere::Intersect(const Ray &r) const {
+  Vec op = pos - r.o;
   double t;
-  double b = op.Dot(ray.d);
-  double det = b*b - op.Dot(op) + r*r;
-  if (det < 0) return 0; else det = sqrt(det);
-  return (t = b - det) > EPS ? t : ((t = b + det) > EPS ? t : 0);
+  double b = op.Dot(r.dir);
+  double dsc = b * b - op.Dot(op) + rad * rad;
+  if (dsc < 0) return 0; else dsc = sqrt(dsc);
+  return (t = b - dsc) > EPS ? t : ((t = b + dsc) > EPS ? t : 0);
 }
 
 Vec Sphere::SurfaceNormal(const Ray &r, double t) const {
-  Vec n = (r(t) - p).Norm();
-  return n.Dot(r.d) < 0 ? n : -n;
+  Vec n = (r(t) - pos).Norm();
+  return n.Dot(r.dir) < 0 ? n : -n;
 }
 
 // Cube::Cube(const double &l_, const Vec &p_, const Vec &e_, const Vec &c_,
