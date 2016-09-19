@@ -29,7 +29,6 @@ Future Implementations
 
 Current Known Issues
 --------------------
-* Random artifacts when using one specular sphere (bug also present in smallpt)
 * Cannot retrieve radius of ``Sphere`` for ray hit since the scene is a ``Shape`` vector
 
 .. _smallpt: http://www.kevinbeason.com/smallpt
